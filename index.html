@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="style1.css">
 </head>
-<body class="min-h-screen bg-black text-white font-sans selection:bg-neutral-800">
+<body class="min-h-screen bg-black text-white font-sans selection:bg-neutral-800 no-select">
     <main class="container mx-auto px-4 pt-32 pb-16 flex flex-col items-center">
         
         <!-- Search Bar -->
@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            <input type="text" id="search-input" placeholder="Search the web..." class="w-full bg-neutral-950 border border-neutral-800 focus:border-neutral-600 rounded-full pl-16 pr-6 py-4 text-lg text-white placeholder-neutral-600 outline-none transition-all shadow-sm focus:shadow-md" autofocus>
+            <input type="text" id="search-input" autocomplete="off" placeholder="Search the web..." class="w-full bg-neutral-950 border border-neutral-800 focus:border-neutral-600 rounded-full pl-16 pr-6 py-4 text-lg text-white placeholder-neutral-600 outline-none transition-all shadow-sm focus:shadow-md" autofocus>
         </form>
 
         <!-- Widgets Grid -->
@@ -34,11 +34,27 @@
         </div>
     </main>
 
-    <!-- Add Modal -->
+    <!-- Context Menu -->
+    <div id="context-menu" class="hidden absolute bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl z-[100] py-1 w-48 overflow-hidden">
+        <button id="cm-left" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="arrow-left" class="w-4 h-4"></i> Move Left</button>
+        <button id="cm-right" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="arrow-right" class="w-4 h-4"></i> Move Right</button>
+        <button id="cm-edit" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3"><i data-lucide="edit-2" class="w-4 h-4"></i> Edit</button>
+        <button id="cm-move-group" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3"><i data-lucide="folder-input" class="w-4 h-4"></i> Move to Group</button>
+        <div class="h-px bg-neutral-800 my-1"></div>
+        <button id="cm-delete" class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 flex items-center gap-3"><i data-lucide="trash-2" class="w-4 h-4"></i> Delete</button>
+    </div>
+
+    <!-- Add Menu Dropdown -->
+    <div id="add-menu" class="hidden absolute bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl z-[60] py-1 w-40 overflow-hidden">
+        <button id="am-widget" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3"><i data-lucide="link" class="w-4 h-4"></i> Add Widget</button>
+        <button id="am-folder" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3"><i data-lucide="folder-plus" class="w-4 h-4"></i> Add Folder</button>
+    </div>
+
+    <!-- Add/Edit Widget Modal -->
     <div id="add-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
         <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200" id="add-modal-content">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-medium text-white">Add Widget</h2>
+                <h2 id="add-modal-title" class="text-xl font-medium text-white">Add Widget</h2>
                 <button id="close-add-modal" class="text-neutral-500 hover:text-white transition-colors">
                     <i data-lucide="x"></i>
                 </button>
@@ -59,22 +75,54 @@
                     </div>
                 </div>
                 <button id="add-widget-btn" disabled class="w-full bg-white text-black font-medium rounded-xl py-3 mt-2 hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                    Add Widget
+                    Save Widget
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Group Modal -->
+    <!-- Create Folder Modal -->
+    <div id="create-folder-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 w-full max-w-2xl shadow-2xl transform scale-95 transition-transform duration-200" id="create-folder-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-medium text-white">Create Folder</h2>
+                <button id="close-folder-modal" class="text-neutral-500 hover:text-white transition-colors"><i data-lucide="x"></i></button>
+            </div>
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-1.5">Folder Name</label>
+                    <input type="text" id="folder-title" placeholder="e.g. Work" class="w-full bg-black border border-neutral-800 rounded-xl px-4 py-3 text-white focus:border-neutral-500 outline-none transition-colors">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-2">Select Widgets to Include</label>
+                    <div id="folder-widgets-grid" class="flex flex-wrap gap-2 max-h-64 overflow-y-auto p-2 bg-black/50 rounded-xl border border-neutral-800"></div>
+                </div>
+                <button id="create-folder-btn" disabled class="w-full bg-white text-black font-medium rounded-xl py-3 mt-2 hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Create Folder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Move to Group Modal -->
+    <div id="move-group-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200" id="move-group-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-medium text-white">Move to Group</h2>
+                <button id="close-move-group-modal" class="text-neutral-500 hover:text-white transition-colors"><i data-lucide="x"></i></button>
+            </div>
+            <div id="move-group-grid" class="space-y-2 max-h-64 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <!-- Group View Modal -->
     <div id="group-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
         <div class="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 w-full max-w-2xl shadow-2xl transform scale-95 transition-transform duration-200" id="group-modal-content">
             <div class="flex justify-between items-center mb-8">
-                <input type="text" id="group-title" class="bg-transparent text-3xl font-medium text-white outline-none border-b border-transparent focus:border-neutral-700 transition-colors px-2 py-1 -ml-2 rounded-lg hover:bg-neutral-800/50 focus:bg-neutral-800/50">
-                <button id="close-group-modal" class="text-neutral-500 hover:text-white bg-neutral-800 hover:bg-neutral-700 rounded-full p-2 transition-colors">
+                <input type="text" id="group-view-title" class="bg-transparent text-3xl font-medium text-white outline-none border-b border-transparent focus:border-neutral-700 transition-colors px-2 py-1 -ml-2 rounded-lg hover:bg-neutral-800/50 focus:bg-neutral-800/50">
+                <button id="close-group-view-modal" class="text-neutral-500 hover:text-white bg-neutral-800 hover:bg-neutral-700 rounded-full p-2 transition-colors">
                     <i data-lucide="x"></i>
                 </button>
             </div>
-            <div id="group-widgets-grid" class="flex flex-wrap gap-4">
+            <div id="group-view-widgets-grid" class="flex flex-wrap gap-4">
                 <!-- Group children injected by JS -->
             </div>
         </div>
