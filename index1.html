@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Start Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body class="min-h-screen bg-black text-white font-sans selection:bg-neutral-800">
+    <main class="container mx-auto px-4 pt-32 pb-16 flex flex-col items-center">
+        
+        <!-- Search Bar -->
+        <form id="search-form" class="w-full max-w-2xl relative flex items-center mb-10">
+            <div class="relative" id="engine-menu-container">
+                <button type="button" id="engine-btn" class="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white transition-colors flex items-center justify-center w-8 h-8 rounded-full hover:bg-neutral-900 grayscale">
+                    <!-- Icon injected by JS -->
+                </button>
+                
+                <div id="engine-menu" class="hidden absolute top-full left-0 mt-4 w-48 bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden z-50 py-2 opacity-0 transition-opacity duration-200">
+                    <!-- Options injected by JS -->
+                </div>
+            </div>
+
+            <input type="text" id="search-input" placeholder="Search the web..." class="w-full bg-neutral-950 border border-neutral-800 focus:border-neutral-600 rounded-full pl-16 pr-6 py-4 text-lg text-white placeholder-neutral-600 outline-none transition-all shadow-sm focus:shadow-md" autofocus>
+        </form>
+
+        <!-- Widgets Grid -->
+        <div class="w-full max-w-6xl">
+            <div id="widgets-grid" class="flex flex-wrap justify-center gap-2 md:gap-3">
+                <!-- Widgets injected by JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Modal -->
+    <div id="add-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200" id="add-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-medium text-white">Add Widget</h2>
+                <button id="close-add-modal" class="text-neutral-500 hover:text-white transition-colors">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-1.5">Title</label>
+                    <input type="text" id="add-title" placeholder="e.g. GitHub" class="w-full bg-black border border-neutral-800 rounded-xl px-4 py-3 text-white focus:border-neutral-500 outline-none transition-colors">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-1.5">URL</label>
+                    <input type="text" id="add-url" placeholder="e.g. github.com" class="w-full bg-black border border-neutral-800 rounded-xl px-4 py-3 text-white focus:border-neutral-500 outline-none transition-colors">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-2">Icon</label>
+                    <div id="icon-grid" class="grid grid-cols-6 gap-2">
+                        <!-- Icons injected by JS -->
+                    </div>
+                </div>
+                <button id="add-widget-btn" disabled class="w-full bg-white text-black font-medium rounded-xl py-3 mt-2 hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                    Add Widget
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Group Modal -->
+    <div id="group-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+        <div class="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 w-full max-w-2xl shadow-2xl transform scale-95 transition-transform duration-200" id="group-modal-content">
+            <div class="flex justify-between items-center mb-8">
+                <input type="text" id="group-title" class="bg-transparent text-3xl font-medium text-white outline-none border-b border-transparent focus:border-neutral-700 transition-colors px-2 py-1 -ml-2 rounded-lg hover:bg-neutral-800/50 focus:bg-neutral-800/50">
+                <button id="close-group-modal" class="text-neutral-500 hover:text-white bg-neutral-800 hover:bg-neutral-700 rounded-full p-2 transition-colors">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div id="group-widgets-grid" class="flex flex-wrap gap-4">
+                <!-- Group children injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app1.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+.widget-item {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.dragging {
+    opacity: 0.4 !important;
+    z-index: 50 !important;
+}
+
+.drag-over {
+    transform: scale(1.1);
+}
+
+.drag-over .widget-icon-container {
+    background-color: #404040 !important; /* neutral-700 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
