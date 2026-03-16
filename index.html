@@ -10,63 +10,70 @@
 </head>
 <body class="min-h-screen bg-black text-white font-sans selection:bg-neutral-800 no-select">
     <main class="container mx-auto px-4 pt-32 pb-16 flex flex-col items-center">
-        
+
         <!-- Search Bar -->
-        <form id="search-form" class="w-full max-w-2xl relative flex items-center mb-10">
+        <form id="search-form" class="w-full max-w-2xl relative flex items-center mb-[--widget-search-gap]">
             <div class="relative" id="engine-menu-container">
-                <button type="button" id="engine-btn" class="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white transition-colors flex items-center justify-center w-8 h-8 rounded-full hover:bg-neutral-900 grayscale">
+                <button type="button" id="engine-btn" class="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-white transition-colors flex items-center justify-center w-8 h-8 rounded-full grayscale z-10">
                     <!-- Icon injected by JS -->
                 </button>
-                
-                <div id="engine-menu" class="hidden absolute top-full left-0 mt-4 w-48 bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl overflow-hidden z-50 py-2 opacity-0 transition-opacity duration-200">
+
+                <div id="engine-menu" class="hidden absolute top-full left-0 mt-4 w-48 glass border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 py-2 opacity-0 transition-opacity duration-200">
                     <!-- Options injected by JS -->
                 </div>
             </div>
 
-            <input type="text" id="search-input" autocomplete="off" placeholder="Search the web..." class="w-full bg-neutral-950 border border-neutral-800 focus:border-neutral-600 rounded-full pl-16 pr-6 py-4 text-lg text-white placeholder-neutral-600 outline-none transition-all shadow-sm focus:shadow-md" autofocus>
+            <input type="text" id="search-input" autocomplete="off" placeholder="Search the web..." class="w-full glass-input border border-white/10 focus:border-white/30 rounded-full pl-16 pr-6 py-3 text-lg text-white placeholder-neutral-600 outline-none transition-all shadow-sm focus:shadow-md" autofocus>
         </form>
 
         <!-- Widgets Grid -->
         <div class="w-full max-w-6xl">
-            <div id="widgets-grid" class="flex flex-wrap justify-center gap-2 md:gap-3">
+            <div id="widgets-grid" class="flex flex-wrap justify-center" style="column-gap: var(--widget-gap-x); row-gap: var(--widget-gap-y);">
                 <!-- Widgets injected by JS -->
             </div>
         </div>
     </main>
 
     <!-- Context Menu -->
-    <div id="context-menu" class="hidden absolute bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl z-[100] py-1 w-48 overflow-hidden">
-        <button id="cm-left" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="arrow-left" class="w-4 h-4"></i> Move Left</button>
-        <button id="cm-right" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="arrow-right" class="w-4 h-4"></i> Move Right</button>
-        <button id="cm-edit" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3"><i data-lucide="edit-2" class="w-4 h-4"></i> Edit</button>
-        <button id="cm-move-group" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3"><i data-lucide="folder-input" class="w-4 h-4"></i> Move to Group</button>
-        <div class="h-px bg-neutral-800 my-1"></div>
-        <button id="cm-delete" class="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 flex items-center gap-3"><i data-lucide="trash-2" class="w-4 h-4"></i> Delete</button>
+    <div id="context-menu" class="hidden absolute glass border border-white/10 rounded-xl shadow-2xl z-[100] py-1 w-48 overflow-hidden">
+        <button id="cm-left" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="arrow-left" class="w-4 h-4"></i> Move Left</button>
+        <button id="cm-right" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"><i data-lucide="arrow-right" class="w-4 h-4"></i> Move Right</button>
+        <button id="cm-edit" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3"><i data-lucide="edit-2" class="w-4 h-4"></i> Edit</button>
+        <button id="cm-move-group" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3"><i data-lucide="folder-input" class="w-4 h-4"></i> Move to Group</button>
+        <button id="cm-remove-from-group" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3"><i data-lucide="arrow-left" class="w-4 h-4"></i> Remove from Folder</button>
+        <div class="h-px bg-white/10 my-1"></div>
+        <button id="cm-delete" class="w-full text-left px-4 py-2 text-sm text-red-400 flex items-center gap-3"><i data-lucide="trash-2" class="w-4 h-4"></i> Delete</button>
+    </div>
+
+    <!-- Empty Space Context Menu -->
+    <div id="empty-context-menu" class="hidden absolute glass border border-white/10 rounded-xl shadow-2xl z-[100] py-1 w-48 overflow-hidden">
+        <button id="ecm-settings" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3"><i data-lucide="settings" class="w-4 h-4"></i> Settings</button>
+        <button id="ecm-add-widget" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3"><i data-lucide="plus" class="w-4 h-4"></i> Add Widget</button>
     </div>
 
     <!-- Add Menu Dropdown -->
-    <div id="add-menu" class="hidden absolute bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl z-[60] py-1 w-40 overflow-hidden">
-        <button id="am-widget" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3"><i data-lucide="link" class="w-4 h-4"></i> Add Widget</button>
-        <button id="am-folder" class="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center gap-3"><i data-lucide="folder-plus" class="w-4 h-4"></i> Add Folder</button>
+    <div id="add-menu" class="hidden absolute glass border border-white/10 rounded-xl shadow-2xl z-[60] py-1 w-40 overflow-hidden">
+        <button id="am-widget" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3"><i data-lucide="link" class="w-4 h-4"></i> Add Widget</button>
+        <button id="am-folder" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3"><i data-lucide="folder-plus" class="w-4 h-4"></i> Add Folder</button>
     </div>
 
     <!-- Add/Edit Widget Modal -->
-    <div id="add-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
-        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200" id="add-modal-content">
+    <div id="add-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xl z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+        <div class="glass border border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200" id="add-modal-content">
             <div class="flex justify-between items-center mb-6">
                 <h2 id="add-modal-title" class="text-xl font-medium text-white">Add Widget</h2>
-                <button id="close-add-modal" class="text-neutral-500 hover:text-white transition-colors">
+                <button id="close-add-modal" class="text-neutral-500 text-white transition-colors">
                     <i data-lucide="x"></i>
                 </button>
             </div>
             <div class="space-y-5">
                 <div>
                     <label class="block text-sm font-medium text-neutral-400 mb-1.5">Title</label>
-                    <input type="text" id="add-title" placeholder="e.g. GitHub" class="w-full bg-black border border-neutral-800 rounded-xl px-4 py-3 text-white focus:border-neutral-500 outline-none transition-colors">
+                    <input type="text" id="add-title" placeholder="e.g. GitHub" class="w-full glass-input border border-white/10 rounded-xl px-4 py-3 text-white focus:border-white/30 outline-none transition-colors">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-neutral-400 mb-1.5">URL</label>
-                    <input type="text" id="add-url" placeholder="e.g. github.com" class="w-full bg-black border border-neutral-800 rounded-xl px-4 py-3 text-white focus:border-neutral-500 outline-none transition-colors">
+                    <input type="text" id="add-url" placeholder="e.g. github.com" class="w-full glass-input border border-white/10 rounded-xl px-4 py-3 text-white focus:border-white/30 outline-none transition-colors">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-neutral-400 mb-2">Icon</label>
@@ -74,7 +81,7 @@
                         <!-- Icons injected by JS -->
                     </div>
                 </div>
-                <button id="add-widget-btn" disabled class="w-full bg-white text-black font-medium rounded-xl py-3 mt-2 hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                <button id="add-widget-btn" disabled class="w-full bg-white/90 text-black font-medium rounded-xl py-3 mt-2 disabled:opacity-50 disabled:cursor-not-allowed">
                     Save Widget
                 </button>
             </div>
@@ -82,48 +89,148 @@
     </div>
 
     <!-- Create Folder Modal -->
-    <div id="create-folder-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
-        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 w-full max-w-2xl shadow-2xl transform scale-95 transition-transform duration-200" id="create-folder-modal-content">
+    <div id="create-folder-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xl z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+        <div class="glass border border-white/10 rounded-2xl p-6 w-full max-w-2xl shadow-2xl transform scale-95 transition-transform duration-200" id="create-folder-modal-content">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-medium text-white">Create Folder</h2>
-                <button id="close-folder-modal" class="text-neutral-500 hover:text-white transition-colors"><i data-lucide="x"></i></button>
+                <button id="close-folder-modal" class="text-neutral-500 text-white transition-colors"><i data-lucide="x"></i></button>
             </div>
             <div class="space-y-5">
                 <div>
                     <label class="block text-sm font-medium text-neutral-400 mb-1.5">Folder Name</label>
-                    <input type="text" id="folder-title" placeholder="e.g. Work" class="w-full bg-black border border-neutral-800 rounded-xl px-4 py-3 text-white focus:border-neutral-500 outline-none transition-colors">
+                    <input type="text" id="folder-title" placeholder="e.g. Work" class="w-full glass-input border border-white/10 rounded-xl px-4 py-3 text-white focus:border-white/30 outline-none transition-colors">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-neutral-400 mb-2">Select Widgets to Include</label>
-                    <div id="folder-widgets-grid" class="flex flex-wrap gap-2 max-h-64 overflow-y-auto p-2 bg-black/50 rounded-xl border border-neutral-800"></div>
+                    <div id="folder-widgets-grid" class="flex flex-wrap gap-2 max-h-64 overflow-y-auto p-2 rounded-xl border border-white/10" style="background: rgba(0,0,0,0.2);"></div>
                 </div>
-                <button id="create-folder-btn" disabled class="w-full bg-white text-black font-medium rounded-xl py-3 mt-2 hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Create Folder</button>
+                <button id="create-folder-btn" disabled class="w-full bg-white/90 text-black font-medium rounded-xl py-3 mt-2 disabled:opacity-50 disabled:cursor-not-allowed">Create Folder</button>
             </div>
         </div>
     </div>
 
     <!-- Move to Group Modal -->
-    <div id="move-group-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
-        <div class="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200" id="move-group-modal-content">
+    <div id="move-group-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xl z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+        <div class="glass border border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200" id="move-group-modal-content">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-xl font-medium text-white">Move to Group</h2>
-                <button id="close-move-group-modal" class="text-neutral-500 hover:text-white transition-colors"><i data-lucide="x"></i></button>
+                <button id="close-move-group-modal" class="text-neutral-500 text-white transition-colors"><i data-lucide="x"></i></button>
             </div>
             <div id="move-group-grid" class="space-y-2 max-h-64 overflow-y-auto"></div>
         </div>
     </div>
 
     <!-- Group View Modal -->
-    <div id="group-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
-        <div class="bg-neutral-900 border border-neutral-800 rounded-3xl p-8 w-full max-w-2xl shadow-2xl transform scale-95 transition-transform duration-200" id="group-modal-content">
-            <div class="flex justify-between items-center mb-8">
-                <input type="text" id="group-view-title" class="bg-transparent text-3xl font-medium text-white outline-none border-b border-transparent focus:border-neutral-700 transition-colors px-2 py-1 -ml-2 rounded-lg hover:bg-neutral-800/50 focus:bg-neutral-800/50">
-                <button id="close-group-view-modal" class="text-neutral-500 hover:text-white bg-neutral-800 hover:bg-neutral-700 rounded-full p-2 transition-colors">
-                    <i data-lucide="x"></i>
-                </button>
+    <div id="group-modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-none z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+        <div class="glass border border-white/10 rounded-3xl p-5 w-[340px] shadow-2xl transform scale-95 transition-transform duration-200" id="group-modal-content">
+            <div class="flex justify-center items-center mb-3">
+                <input type="text" id="group-view-title" class="bg-transparent text-xl font-medium text-white outline-none border-b border-transparent focus:border-white/20 transition-colors px-2 py-1 -ml-2 rounded-lg focus:bg-white/5 text-center">
             </div>
-            <div id="group-view-widgets-grid" class="flex flex-wrap gap-4">
-                <!-- Group children injected by JS -->
+            <div id="group-view-widgets-container" class="relative overflow-hidden mb-4" style="width: 280px; margin: 0 auto;">
+                <div id="group-view-widgets-grid" class="transition-transform duration-300" style="display: flex; flex-wrap: nowrap; width: max-content; gap: 10px;">
+                    <!-- Group children injected by JS -->
+                </div>
+            </div>
+            <div id="group-pagination" class="flex items-center justify-center gap-2 pb-2">
+                <!-- Dots injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xl z-50 flex items-center justify-center p-4 opacity-0 transition-opacity duration-200">
+        <div class="glass border border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl transform scale-95 transition-transform duration-200 max-h-[85vh] overflow-y-auto" id="settings-modal-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-medium text-white">Settings</h2>
+                <button id="close-settings-modal" class="text-neutral-500 text-white transition-colors"><i data-lucide="x"></i></button>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-3">Theme</label>
+                    <div class="flex gap-2">
+                        <button id="theme-amoled" class="setting-btn flex-1 py-2.5 px-3 rounded-lg text-sm font-medium transition-all" data-theme="amoled">
+                            <span class="block w-6 h-6 rounded-md bg-black mx-auto mb-1.5 border border-white/20"></span>
+                            AMOLED
+                        </button>
+                        <button id="theme-black" class="setting-btn flex-1 py-2.5 px-3 rounded-lg text-sm font-medium transition-all" data-theme="black">
+                            <span class="block w-6 h-6 rounded-md bg-[#121212] mx-auto mb-1.5 border border-white/20"></span>
+                            Black
+                        </button>
+                        <button id="theme-light" class="setting-btn flex-1 py-2.5 px-3 rounded-lg text-sm font-medium transition-all" data-theme="light">
+                            <span class="block w-6 h-6 rounded-md bg-[#e8e8e8] mx-auto mb-1.5 border border-black/10"></span>
+                            Light
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-3">Icon Shape</label>
+                    <div class="flex gap-2">
+                        <button id="icon-square" class="setting-btn flex-1 py-2.5 px-3 rounded-lg text-sm font-medium transition-all" data-shape="square">
+                            <span class="block w-6 h-6 rounded-md bg-white/20 mx-auto mb-1.5"></span>
+                            Square
+                        </button>
+                        <button id="icon-round" class="setting-btn flex-1 py-2.5 px-3 rounded-lg text-sm font-medium transition-all" data-shape="round">
+                            <span class="block w-6 h-6 rounded-full bg-white/20 mx-auto mb-1.5"></span>
+                            Round
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-3">Add Button</label>
+                    <div class="flex gap-2">
+                        <button id="add-btn-show" class="setting-btn flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all" data-addbtn="true">Show</button>
+                        <button id="add-btn-hide" class="setting-btn flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all" data-addbtn="false">Hide</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-3">Widget Size</label>
+                    <input type="range" id="widget-size-slider" min="40" max="80" value="64" class="w-full">
+                    <div class="flex justify-between text-xs text-neutral-500 mt-1">
+                        <span>Small</span>
+                        <span id="widget-size-value">64px</span>
+                        <span>Large</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-3">Widget Spacing</label>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs text-neutral-500 mb-1">
+                                <span>Horizontal</span>
+                                <span id="widget-gap-x-value">8px</span>
+                            </div>
+                            <input type="range" id="widget-gap-x-slider" min="0" max="40" value="8" class="w-full">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs text-neutral-500 mb-1">
+                                <span>Vertical</span>
+                                <span id="widget-gap-y-value">8px</span>
+                            </div>
+                            <input type="range" id="widget-gap-y-slider" min="0" max="40" value="8" class="w-full">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-3">Search Spacing</label>
+                    <input type="range" id="search-gap-slider" min="0" max="80" value="40" class="w-full">
+                    <div class="flex justify-between text-xs text-neutral-500 mt-1">
+                        <span>Close</span>
+                        <span id="search-gap-value">40px</span>
+                        <span>Far</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-neutral-400 mb-3">Data Management</label>
+                    <div class="flex gap-2">
+                        <button id="export-btn" class="flex-1 py-2.5 px-4 rounded-lg border border-white/20 bg-white/10 text-neutral-300 font-medium transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="download" class="w-4 h-4"></i> Export
+                        </button>
+                        <button id="import-btn" class="flex-1 py-2.5 px-4 rounded-lg border border-white/20 bg-white/10 text-neutral-300 font-medium transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="upload" class="w-4 h-4"></i> Import
+                        </button>
+                    </div>
+                    <input type="file" id="import-file" accept=".json" class="hidden">
+                </div>
             </div>
         </div>
     </div>
