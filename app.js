@@ -1,15 +1,73 @@
-const SEARCH_ENGINES = {
-  google: { name: 'Google', url: 'https://www.google.com/search?q=', iconHtml: '<span class="font-bold text-lg leading-none">G</span>' },
-  yandex: { name: 'Yandex', url: 'https://yandex.ru/search/?text=', iconHtml: '<span class="font-bold text-lg leading-none text-red-500">Y</span>' },
-  duckduckgo: { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=', iconHtml: '<span class="font-bold text-lg leading-none text-orange-500">D</span>' },
+// Built-in SVG icons — no external dependencies
+const BUILTIN_ICONS = {
+    'image': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
+    'music': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+    'video': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>',
+    'file-text': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>',
+    'code': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    'terminal': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>',
+    'book': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>',
+    'graduation-cap': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>',
+    'bot': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>',
+    'sparkles': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/></svg>',
+    'github': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>',
+    'globe': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>',
+    'folder': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>',
+    'plus': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>',
+    'youtube': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg>',
+    'brain': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/></svg>',
+    'coffee': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></svg>',
+    // UI icons
+    'arrow-left': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>',
+    'arrow-right': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>',
+    'edit-2': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>',
+    'trash-2': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>',
+    'settings': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>',
+    'x': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+    'chevron-down': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+    'folder-plus': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10v6"/><path d="M9 13h6"/><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>',
+    'link': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+    'download': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>',
+    'upload': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>',
+    'folder-input': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1"/><path d="M2 13h10"/><path d="M7 18v-6"/><path d="M4 15l3-3 3 3"/></svg>',
 };
 
-const ICONS = [
-  'globe', 'github', 'twitter', 'youtube', 'mail', 'message-square', 'image', 'music', 'video', 'file-text', 'code', 'terminal', 'book', 'graduation-cap', 'bot', 'sparkles', 'brain', 'coffee', 'briefcase', 'pen-tool', 'layout', 'gamepad-2',
-  'instagram', 'facebook', 'linkedin', 'telegram', 'discord', 'slack', 'whatsapp', 'phone', 'smartphone', 'monitor', 'cloud', 'download', 'upload', 'search', 'star', 'heart', 'bookmark', 'calendar', 'clock', 'bell', 'home', 'shopping-cart', 'dollar-sign', 'credit-card', 'film', 'tv', 'radio', 'newspaper', 'rss', 'share-2', 'link', 'external-link', 'lock', 'unlock', 'shield', 'key', 'user', 'users', 'settings', 'sliders', 'bar-chart-3', 'pie-chart', 'trending-up', 'activity', 'cpu', 'hard-drive', 'database', 'server', 'wifi', 'bluetooth', 'usb', 'battery', 'power', 'refresh-cw', 'check-circle', 'alert-circle', 'help-circle', 'info', 'plus-circle', 'minus-circle', 'x-circle', 'chevron-right', 'chevron-left', 'arrow-right', 'arrow-left', 'move', 'copy', 'clipboard', 'edit-3', 'trash', 'save', 'print', 'camera', 'mic', 'volume-2', 'headphones', 'play', 'pause', 'stop-circle'
-];
+const SEARCH_ENGINES = {
+  google: { name: 'Google', url: 'https://www.google.com/search?q=', iconHtml: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>' },
+  yandex: { name: 'Yandex', url: 'https://yandex.ru/search/?text=', iconHtml: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="yandex-icon"><polyline points="6,4 12,12 18,4"/><line x1="12" y1="12" x2="12" y2="20"/></svg>' },
+  duckduckgo: { name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=', iconHtml: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff"><path d="M8.5,5A1.5,1.5 0 0,0 7,6.5A1.5,1.5 0 0,0 8.5,8A1.5,1.5 0 0,0 10,6.5A1.5,1.5 0 0,0 8.5,5M10,2A5,5 0 0,1 15,7C15,8.7 14.15,10.2 12.86,11.1C14.44,11.25 16.22,11.61 18,12.5C21,14 22,12 22,12C22,12 21,21 15,21H9C9,21 4,21 4,16C4,13 7,12 6,10C2,10 2,6.5 2,6.5C3,7 4.24,7 5,6.65C5.19,4.05 7.36,2 10,2Z"/></svg>' },
+};
 
-const POPULAR_ICONS = ['globe', 'github', 'twitter', 'youtube', 'mail', 'message-square', 'image', 'music', 'video', 'file-text', 'code', 'terminal', 'book', 'graduation-cap', 'bot', 'sparkles', 'brain', 'coffee', 'briefcase', 'pen-tool', 'layout', 'gamepad-2', 'instagram', 'facebook', 'linkedin', 'telegram', 'discord'];
+// Helper function to get icon SVG with proper styling
+function getIcon(iconName, className = '', style = '') {
+    const svg = BUILTIN_ICONS[iconName];
+    if (!svg) {
+        console.warn(`Icon "${iconName}" not found, using globe`);
+        return BUILTIN_ICONS['globe'];
+    }
+    let result = svg;
+    if (className) {
+        result = result.replace('<svg ', `<svg class="${className}" `);
+    }
+    if (style) {
+        result = result.replace('<svg ', `<svg style="${style}" `);
+    }
+    return result;
+}
+
+// Replace all data-lucide attributes in HTML with inline SVGs
+function initInlineIcons() {
+    document.querySelectorAll('[data-lucide]').forEach(el => {
+        const iconName = el.getAttribute('data-lucide');
+        const className = el.getAttribute('class') || '';
+        const style = el.getAttribute('style') || '';
+        const iconSvg = getIcon(iconName, className, style);
+        el.outerHTML = iconSvg;
+    });
+}
+
+const ICONS = Object.keys(BUILTIN_ICONS);
+const POPULAR_ICONS = ['globe', 'github', 'youtube', 'book', 'graduation-cap', 'bot', 'sparkles', 'brain', 'coffee', 'image', 'music', 'video', 'file-text', 'code', 'terminal', 'folder'];
 
 let iconsExpanded = false;
 
@@ -125,7 +183,6 @@ const settingsModalContent = document.getElementById('settings-modal-content');
 const closeSettingsModalBtn = document.getElementById('close-settings-modal');
 const themeAmoledBtn = document.getElementById('theme-amoled');
 const themeBlackBtn = document.getElementById('theme-black');
-const themeLightBtn = document.getElementById('theme-light');
 const iconSquareBtn = document.getElementById('icon-square');
 const iconRoundBtn = document.getElementById('icon-round');
 const addBtnShowBtn = document.getElementById('add-btn-show');
@@ -153,11 +210,9 @@ function saveSettings() {
 
 function applySettings() {
     // Apply theme
-    document.body.classList.remove('theme-black', 'theme-light');
+    document.body.classList.remove('theme-black');
     if (settings.theme === 'black') {
         document.body.classList.add('theme-black');
-    } else if (settings.theme === 'light') {
-        document.body.classList.add('theme-light');
     }
 
     // Apply icon shape
@@ -253,9 +308,14 @@ function hideModal(modal, content) {
 // --- Search Engine Menu ---
 function renderEngineMenu() {
     engineBtn.innerHTML = SEARCH_ENGINES[engine].iconHtml;
+    engineBtn.setAttribute('data-engine', engine);
     engineMenu.innerHTML = Object.keys(SEARCH_ENGINES).map(key => `
         <button type="button" data-engine="${key}" class="engine-option w-full text-left px-4 py-3 flex items-center gap-3 rounded-lg transition-colors ${engine === key ? 'selected text-white' : 'text-neutral-400'}">
-            <div class="w-6 flex justify-center grayscale">${SEARCH_ENGINES[key].iconHtml}</div>
+            <div class="flex-shrink-0 flex items-center justify-center" style="width: 1.25rem; height: 1.25rem;">
+                <div class="engine-icon-inner yandex-icon-wrapper" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                    ${SEARCH_ENGINES[key].iconHtml}
+                </div>
+            </div>
             <span class="font-medium flex-1">${SEARCH_ENGINES[key].name}</span>
         </button>
     `).join('');
@@ -562,15 +622,20 @@ function createWidgetElement(widget) {
 
     let innerHtml = '';
     if (widget.type === 'link') {
-        innerHtml = `<i data-lucide="${widget.icon}" class="text-neutral-400 text-white transition-colors" style="width: calc(var(--widget-size) * 0.4); height: calc(var(--widget-size) * 0.4);"></i>`;
+        const iconSize = `calc(var(--widget-size) * 0.4)`;
+        innerHtml = getIcon(widget.icon, 'widget-icon-color transition-colors', `width: ${iconSize}; height: ${iconSize};`);
     } else if (widget.type === 'group' && settings.folderStyle === 'icon') {
-        innerHtml = `<i data-lucide="folder" class="folder-icon text-neutral-400 text-white transition-colors" style="width: calc(var(--widget-size) * 0.4); height: calc(var(--widget-size) * 0.4);"></i>`;
+        const iconSize = `calc(var(--widget-size) * 0.4)`;
+        innerHtml = getIcon('folder', 'folder-icon widget-icon-color transition-colors', `width: ${iconSize}; height: ${iconSize};`);
     } else if (widget.type === 'group') {
-        const childrenHtml = widget.children.slice(0, 4).map(child => `
+        const childrenHtml = widget.children.slice(0, 4).map(child => {
+            const previewSize = `calc(var(--widget-size) * 0.18)`;
+            return `
             <div class="flex items-center justify-center folder-preview-icon">
-                <i data-lucide="${child.icon}" class="text-neutral-300" style="width: calc(var(--widget-size) * 0.18); height: calc(var(--widget-size) * 0.18);"></i>
+                ${getIcon(child.icon, 'text-neutral-300', `width: ${previewSize}; height: ${previewSize};`)}
             </div>
-        `).join('');
+        `;
+        }).join('');
         innerHtml = `<div class="folder-preview grid grid-cols-2 gap-0.5 p-1 w-full h-full">${childrenHtml}</div>`;
     }
 
@@ -636,13 +701,15 @@ function renderWidgets() {
     addBtn.className = 'flex flex-col items-center gap-2 group relative';
     addBtn.id = 'add-widget-btn-main';
     addBtn.style.width = 'var(--widget-size)';
+    
+    const plusIconSize = `calc(var(--widget-size) * 0.35)`;
     addBtn.innerHTML = `
         <div class="flex items-center justify-center bg-transparent border-2 border-dashed border-neutral-800 transition-colors pointer-events-none" style="width: var(--widget-size); height: var(--widget-size); border-radius: 12px;">
-            <i data-lucide="plus" class="text-neutral-600 text-neutral-400 transition-colors" style="width: calc(var(--widget-size) * 0.35); height: calc(var(--widget-size) * 0.35);"></i>
+            ${getIcon('plus', 'text-neutral-600 text-neutral-400 transition-colors', `width: ${plusIconSize}; height: ${plusIconSize};`)}
         </div>
         <span class="text-[10px] font-medium text-transparent pointer-events-none">Add</span>
     `;
-    
+
     addBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         const rect = addBtn.getBoundingClientRect();
@@ -650,9 +717,8 @@ function renderWidgets() {
         addMenu.style.top = `${rect.bottom + window.scrollY + 8}px`;
         addMenu.classList.remove('hidden');
     });
-    
+
     widgetsGrid.appendChild(addBtn);
-    lucide.createIcons();
 }
 
 // Global click handler to close menus
@@ -680,12 +746,16 @@ amFolder.addEventListener('click', () => {
 // --- Add/Edit Widget Modal ---
 function renderIconGrid() {
     const iconsToShow = iconsExpanded ? ICONS : POPULAR_ICONS;
-    
-    iconGrid.innerHTML = iconsToShow.map(icon => `
-        <button type="button" data-icon="${icon}" class="icon-btn p-3 rounded-xl flex items-center justify-center transition-all ${selectedIcon === icon ? 'bg-white/90 text-black' : 'bg-white/5 text-neutral-500'}">
-            <i data-lucide="${icon}" class="w-5 h-5"></i>
+
+    iconGrid.innerHTML = iconsToShow.map(icon => {
+        const isSelected = selectedIcon === icon;
+        const iconClass = isSelected ? 'bg-white/90 text-black' : 'bg-white/5 text-neutral-500';
+        return `
+        <button type="button" data-icon="${icon}" class="icon-btn p-3 rounded-xl flex items-center justify-center transition-all ${iconClass}">
+            ${getIcon(icon, 'w-5 h-5', 'width: 20px; height: 20px;')}
         </button>
-    `).join('');
+    `;
+    }).join('');
 
     document.querySelectorAll('.icon-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -693,8 +763,7 @@ function renderIconGrid() {
             renderIconGrid();
         });
     });
-    lucide.createIcons();
-    
+
     // Update button text
     toggleIconsText.textContent = iconsExpanded ? 'Show Less' : 'Show All Icons';
 }
@@ -780,14 +849,17 @@ function openCreateFolderModal() {
     checkFolderForm();
 
     const linkWidgets = widgets.filter(w => w.type === 'link');
-    folderWidgetsGrid.innerHTML = linkWidgets.map(w => `
+    folderWidgetsGrid.innerHTML = linkWidgets.map(w => {
+        const widgetSize = `calc(var(--widget-size) * 0.35)`;
+        return `
         <div data-id="${w.id}" class="folder-select-widget cursor-pointer p-2 rounded-xl border-2 border-transparent flex flex-col items-center gap-2" style="width: var(--widget-size);">
             <div class="icon-container flex items-center justify-center text-neutral-400 transition-colors" style="width: var(--widget-size); height: var(--widget-size); border-radius: 12px;">
-                <i data-lucide="${w.icon}" style="width: calc(var(--widget-size) * 0.35); height: calc(var(--widget-size) * 0.35);"></i>
+                ${getIcon(w.icon, 'widget-icon-color', `width: ${widgetSize}; height: ${widgetSize};`)}
             </div>
             <span class="text-[10px] text-neutral-500 truncate w-full text-center">${w.title}</span>
         </div>
-    `).join('');
+    `;
+    }).join('');
 
     document.querySelectorAll('.folder-select-widget').forEach(el => {
         el.addEventListener('click', (e) => {
@@ -802,7 +874,6 @@ function openCreateFolderModal() {
         });
     });
 
-    lucide.createIcons();
     showModal(createFolderModal, createFolderModalContent);
     folderTitleInput.focus();
 }
@@ -844,7 +915,7 @@ function openMoveToGroupModal(widgetId) {
     const groups = widgets.filter(w => w.type === 'group' && w.id !== widgetId);
     moveGroupGrid.innerHTML = groups.map(g => `
         <button data-id="${g.id}" class="move-target-group w-full text-left px-4 py-3 bg-neutral-800 rounded-xl text-white flex items-center gap-3 transition-colors">
-            <i data-lucide="folder" class="w-5 h-5 text-neutral-400"></i>
+            ${getIcon('folder', 'w-5 h-5 text-neutral-400', 'width: 20px; height: 20px;')}
             ${g.title}
         </button>
     `).join('');
@@ -853,7 +924,7 @@ function openMoveToGroupModal(widgetId) {
         btn.addEventListener('click', (e) => {
             const targetGroupId = e.currentTarget.dataset.id;
             const widgetIdx = widgets.findIndex(w => w.id === widgetId);
-            
+
             if (widgetIdx !== -1) {
                 const [widget] = widgets.splice(widgetIdx, 1);
                 const newGroupIdx = widgets.findIndex(w => w.id === targetGroupId);
@@ -867,7 +938,6 @@ function openMoveToGroupModal(widgetId) {
         });
     });
 
-    lucide.createIcons();
     showModal(moveGroupModal, moveGroupModalContent);
 }
 
@@ -1071,6 +1141,7 @@ function renderGroupViewWidgets() {
     const gapY = 8;
     const pageWidth = widgetSize * 3 + gapX * 2;
     const slideGap = 8;
+    const iconSize = widgetSize * 0.35;
 
     // Update container width to match page width
     groupViewWidgetsContainer.style.width = pageWidth + 'px';
@@ -1087,7 +1158,7 @@ function renderGroupViewWidgets() {
             return `
             <div class="group-widget-item relative flex flex-col items-center" data-index="${globalIndex}" style="width: ${widgetSize}px; cursor: pointer;">
                 <div class="group-widget-icon flex items-center justify-center text-neutral-400 text-white transition-colors shadow-sm bg-neutral-900 border border-neutral-800" style="width: ${widgetSize}px; height: ${widgetSize}px;">
-                    <i data-lucide="${child.icon}" style="width: ${widgetSize * 0.35}px; height: ${widgetSize * 0.35}px;"></i>
+                    ${getIcon(child.icon, 'widget-icon-color', `width: ${iconSize}px; height: ${iconSize}px;`)}
                 </div>
                 <a href="${child.url}" class="absolute inset-0" style="z-index: 1;"></a>
                 <span class="text-[9px] font-medium text-neutral-400 text-neutral-200 truncate w-full text-center px-1" style="margin-top: ${gapY / 2}px; pointer-events: none;">
@@ -1124,8 +1195,6 @@ function renderGroupViewWidgets() {
 
     // Update pagination dots
     renderPaginationDots(totalPages);
-
-    lucide.createIcons();
 }
 
 function renderPaginationDots(totalPages) {
@@ -1290,6 +1359,20 @@ importFile.addEventListener('change', (e) => {
 });
 
 // Init
-renderEngineMenu();
-renderWidgets();
-applySettings();
+function initApp() {
+    initInlineIcons();
+    renderEngineMenu();
+    renderWidgets();
+    applySettings();
+
+    // Register Service Worker for offline support
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then((reg) => console.log('[SW] Registered:', reg.scope))
+                .catch((err) => console.log('[SW] Registration failed:', err));
+        });
+    }
+}
+
+initApp();

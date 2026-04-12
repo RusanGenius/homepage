@@ -1,4 +1,4 @@
-# Minimal Start Page
+# Homepage Browser
 
 A minimalist browser start page with dark theme, widgets, and folders.
 
@@ -9,29 +9,29 @@ A minimalist browser start page with dark theme, widgets, and folders.
 - **Minimalist Design** — clean AMOLED black interface
 - **Search** — supports Google, Yandex, DuckDuckGo
 - **Widgets** — create shortcuts for your favorite websites
-- **Folders** — organize widgets into folders for easy management
+- **Folders** — organize widgets into groups
 - **Customization** — adjust widget size, spacing, icon shape, and theme
 - **Export/Import** — save and restore your settings
-- **100+ Icons** — extensive icon selection for widgets
-- **Responsive** — works on desktop and mobile devices
+- **Offline Mode** — Service Worker caches all files for instant loading
+- **Built-in Icons** — no external icon dependencies
 
 ## 🚀 Installation
 
 ### Using as Homepage
 
-1. **Deploy the project** to a hosting service (GitHub Pages, Netlify, Vercel, or any other)
+1. **Deploy the project** to GitHub Pages, Netlify, Vercel, or any hosting service
 2. **Copy the URL** of your deployed project
 3. **Open browser settings** and set the URL as your homepage
 
 #### Samsung Internet
 1. Open menu (three lines) → **Settings**
 2. Go to **Homepage** → **Homepage** → **Custom page**
-3. Paste the URL https://github.com/RusanGenius/homepage
+3. Paste the project URL
 
 #### Chrome
 1. Open **Settings** → **Appearance**
 2. Enable **Show Home button**
-3. Select **Enter custom web address** and paste https://github.com/RusanGenius/homepage
+3. Select **Enter custom web address** and paste the project URL
 
 #### Firefox
 1. Open **Settings** → **Home**
@@ -40,10 +40,9 @@ A minimalist browser start page with dark theme, widgets, and folders.
 
 ### Local Run
 
-Simply open the `index.html` file in any browser:
+Simply open the `index.html` file in any browser or run a local server:
 
 ```bash
-# Or use a local server
 python -m http.server 8000
 # Then open http://localhost:8000
 ```
@@ -53,10 +52,9 @@ python -m http.server 8000
 ### Themes
 - **AMOLED** — deep black background
 - **Black** — dark gray background
-- **Light** — light theme (beta)
 
 ### Icon Shape
-- **Square** — square with rounded corners
+- **Square** — rounded square
 - **Round** — circular
 
 ### Folder Styles
@@ -67,7 +65,7 @@ python -m http.server 8000
 - Widget size (40–80px)
 - Horizontal gap between widgets
 - Vertical gap between widgets
-- Gap between search and widgets
+- Gap between search bar and widgets
 
 ## 📋 Functions
 
@@ -75,25 +73,26 @@ python -m http.server 8000
 - **Move Left/Right** — move widget left or right
 - **Edit** — edit widget
 - **Move to Group** — move to folder
-- **Remove from Folder** — remove from folder
+- **Remove from Folder** — move back to homepage
 - **Delete** — delete widget
 
 ### Folder Context Menu (inside open folder)
 - **Remove from Folder** — move to homepage
 - **Delete** — delete widget
 
-### Empty Space Context Menu
+### Empty Space Context Menu (long press)
 - **Settings** — open settings
-- **Add Widget** — add new widget
+- **Add Widget** — create new widget
 - **Add Folder** — create new folder
 
 ## 📁 Project Structure
 
 ```
-homepage-browser/
-├── index.html      # HTML markup
-├── style1.css      # Styles and themes
-├── app1.js         # Application logic
+Homepage Browser/
+├── index.html      # HTML markup + inline CSS styles
+├── app.js          # Application logic
+├── sw.js           # Service Worker (offline cache)
+├── style.css       # Styles backup
 └── README.md       # Documentation
 ```
 
@@ -103,15 +102,17 @@ Settings include **Export** and **Import** buttons to save and restore all widge
 
 ## 🛠 Technologies
 
-- **HTML5**
-- **CSS3** (Tailwind CSS via CDN)
-- **JavaScript** (Vanilla)
-- **Lucide Icons** — icon library
+- **HTML5** — inline CSS for instant loading
+- **CSS3** — Tailwind CSS (CDN) + custom styles
+- **JavaScript** — vanilla JS, no frameworks
+- **Built-in SVG Icons** — no external dependencies
+- **Service Worker** — PWA caching for offline support
 
 ## 📝 Notes
 
-- All data is stored in browser's `localStorage`
-- Internet connection required (for loading Tailwind and Lucide Icons)
+- All data is stored in browser `localStorage`
+- Internet connection required for first load (Tailwind CSS CDN)
+- After first load, Service Worker caches everything — page works offline
 - Swipe gestures supported for folder navigation on mobile devices
 
 ## 📄 License

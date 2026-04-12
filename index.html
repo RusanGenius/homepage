@@ -4,9 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minimal Start Page</title>
+    <!-- Preconnect for search engines -->
+    <link rel="preconnect" href="https://www.google.com">
+    <link rel="dns-prefetch" href="https://www.google.com">
+    <link rel="preconnect" href="https://yandex.ru">
+    <link rel="dns-prefetch" href="https://yandex.ru">
+    <link rel="preconnect" href="https://duckduckgo.com">
+    <link rel="dns-prefetch" href="https://duckduckgo.com">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="style.css">
+    <style>
+:root{--widget-gap-x:0.5rem;--widget-gap-y:0.5rem;--widget-search-gap:2.5rem;--widget-size:64px;--widget-icon-color:#c0c0c0}@media(min-width:768px){:root{--widget-gap-x:0.75rem;--widget-gap-y:0.75rem;--widget-search-gap:2.5rem;--widget-size:64px}}.widget-item{transition:transform .2s ease,opacity .2s ease}.widget-icon-color{color:var(--widget-icon-color)}.widget-icon-color:hover{color:#fff}.no-select{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}.folder-select-widget{transition:all .2s ease}.folder-select-widget.selected{background-color:rgba(255,255,255,.1);border-color:rgba(255,255,255,.3)!important}.folder-select-widget.selected .icon-container{background-color:rgba(255,255,255,.15);color:#fff}.glass{background:rgba(20,20,20,.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.glass-light{background:rgba(255,255,255,.1);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.glass-input{background:rgba(20,20,20,.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}body.theme-black{background-color:#121212!important}body.theme-black .glass{background:rgba(30,30,30,.7)!important}body.theme-black .glass-input{background:rgba(30,30,30,.5)!important}.icon-shape-round .widget-icon-container,.icon-shape-round .icon-container,.icon-shape-round #add-widget-btn-main>div,.icon-shape-round .folder-preview-icon,.icon-shape-round #group-view-widgets-grid>a>div,.icon-shape-round .group-widget-icon{border-radius:50%!important}body.folder-style-icon .folder-preview{display:none!important}body.folder-style-icon .folder-icon{display:inline-block!important}.folder-icon{display:none}.add-btn-hidden #add-widget-btn-main{display:none!important}.folder-preview-no-bg .folder-preview-icon{background:transparent!important}.folder-preview-icon{background:transparent!important}.group-widget-icon{border-radius:12px}.group-title-input{border-bottom:1px solid transparent;background:transparent}.group-title-input:focus{border-bottom-color:rgba(255,255,255,.3);background:transparent}#settings-modal-content::-webkit-scrollbar{width:6px}#settings-modal-content::-webkit-scrollbar-track{background:transparent}#settings-modal-content::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:3px}#icon-grid-container::-webkit-scrollbar{width:6px}#icon-grid-container::-webkit-scrollbar-track{background:transparent}#icon-grid-container::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px}#icon-grid-container::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.25)}#engine-menu .engine-option{border-radius:8px;margin:2px 6px;padding-left:12px;padding-right:36px;position:relative}#engine-menu .engine-option.selected{color:#fff}.yandex-icon-wrapper{overflow:hidden}.yandex-icon{transform:scaleY(1.15)}#engine-menu .engine-option[data-engine="google"] .engine-icon-inner,#engine-menu .engine-option[data-engine="duckduckgo"] .engine-icon-inner,#engine-menu .engine-option[data-engine="yandex"] .engine-icon-inner{filter:grayscale(1) brightness(.7)}#engine-menu .engine-option>span{font-weight:300}#engine-btn svg{width:1.15rem!important;height:1.15rem!important}#engine-btn[data-engine="google"],#engine-btn[data-engine="duckduckgo"],#engine-btn[data-engine="yandex"]{filter:grayscale(1) brightness(.7)!important}#engine-btn{display:flex;align-items:center;justify-content:center}.setting-btn{background:rgba(255,255,255,.05);border:1.5px solid transparent;color:#a3a3a3}.setting-btn.active{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);color:#fff}input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.1);outline:none}input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;cursor:pointer}input[type="range"]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;cursor:pointer;border:none}@keyframes fadeIn{from{opacity:0}to{opacity:1}}@keyframes fadeOut{from{opacity:1}to{opacity:0}}.modal-enter{animation:fadeIn .2s ease forwards}.modal-exit{animation:fadeOut .2s ease forwards}
+    </style>
 </head>
 <body class="min-h-screen bg-black text-white font-sans selection:bg-neutral-800 no-select">
     <main class="container mx-auto px-4 pt-32 pb-16 flex flex-col items-center">
@@ -60,7 +68,7 @@
 
     <!-- Add Menu Dropdown -->
     <div id="add-menu" class="hidden absolute glass border border-white/10 rounded-xl shadow-2xl z-[60] py-1 w-40 overflow-hidden">
-        <button id="am-widget" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3"><i data-lucide="link" class="w-4 h-4"></i> Add Widget</button>
+        <button id="am-widget" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3"><i data-lucide="plus" class="w-4 h-4"></i> Add Widget</button>
         <button id="am-folder" class="w-full text-left px-4 py-2 text-sm text-neutral-300 flex items-center gap-3"><i data-lucide="folder-plus" class="w-4 h-4"></i> Add Folder</button>
     </div>
 
@@ -169,10 +177,6 @@
                             <span class="block w-6 h-6 rounded-md bg-[#121212] mx-auto mb-1.5 border border-white/20"></span>
                             Black
                         </button>
-                        <button id="theme-light" class="setting-btn flex-1 py-2.5 px-3 rounded-lg text-sm font-medium transition-all" data-theme="light">
-                            <span class="block w-6 h-6 rounded-md bg-[#e8e8e8] mx-auto mb-1.5 border border-black/10"></span>
-                            Light
-                        </button>
                     </div>
                 </div>
                 <div>
@@ -270,6 +274,6 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js" defer></script>
 </body>
 </html>
